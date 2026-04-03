@@ -1,16 +1,16 @@
-name: Publish latest JAR
+name: Publish release JAR
 
 on:
   push:
-    branches:
-      - master
+    tags:
+      - 'v*'
   workflow_dispatch:
 
 permissions:
   contents: write
 
 concurrency:
-  group: publish-latest-jar
+  group: publish-release-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -20,8 +20,6 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Set up Java 21
         uses: actions/setup-java@v5
@@ -36,7 +34,7 @@ jobs:
       - name: Build release JAR
         run: ./gradlew clean build
 
-      - name: Locate remapped JAR
+      - name: Locate release JAR
         id: jar
         shell: bash
         run: |
@@ -68,46 +66,19 @@ jobs:
           fi
 
           latest_jar="${release_jars[0]}"
-          latest_asset="build/libs/playtimelink-fabric-latest.jar"
 
-          cp "$latest_jar" "$latest_asset"
-
-          echo "path=$latest_asset" >> "$GITHUB_OUTPUT"
+          echo "path=$latest_jar" >> "$GITHUB_OUTPUT"
           echo "name=$(basename "$latest_jar")" >> "$GITHUB_OUTPUT"
 
-      - name: Move latest tag to current commit
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git tag -fa latest "$GITHUB_SHA" -m "Latest automated build"
-          git push origin refs/tags/latest --force
-
-      - name: Remove old latest release assets
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        shell: bash
-        run: |
-          if ! gh release view latest >/dev/null 2>&1; then
-            exit 0
-          fi
-
-          while IFS= read -r asset_name; do
-            if [ -n "$asset_name" ]; then
-              gh release delete-asset latest "$asset_name" --yes
-            fi
-          done < <(gh release view latest --json assets --jq '.assets[].name')
-
-      - name: Publish latest release
+      - name: Publish versioned release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: latest
-          name: Latest build
-          target_commitish: ${{ github.sha }}
+          tag_name: ${{ github.ref_name }}
+          name: Release ${{ github.ref_name }}
           body: |
-            Automated build from `${{ github.ref_name }}` at `${{ github.sha }}`.
+            Automated release for `${{ github.ref_name }}` built from `${{ github.sha }}`.
 
             Asset: `${{ steps.jar.outputs.name }}`
           files: ${{ steps.jar.outputs.path }}
           overwrite_files: true
+          generate_release_notes: true

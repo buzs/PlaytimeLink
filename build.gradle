@@ -4,10 +4,9 @@ plugins {
 }
 
 group = '_1ms'
-version = '1.0.0'
 
 base {
-    archivesName = 'playtimelink-fabric'
+    archivesName = project.archives_base_name
 }
 
 ext {

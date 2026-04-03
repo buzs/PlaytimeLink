@@ -52,6 +52,6 @@ header:
 - Local-only workspace files such as IDE metadata, `bin/`, and nested Git metadata are ignored and should not be included in commits.
 
 ## Automated Releases
-- GitHub Actions now rebuilds the mod on every push to `master` and on manual dispatch.
-- The workflow force-updates the `latest` release tag to the current commit and uploads a single stable asset named `playtimelink-fabric-latest.jar`.
-- After enabling Actions in your fork, download the current artifact from the repository's **Releases** page.
+- GitHub Actions now creates a versioned release whenever you push a tag that starts with `v`, such as `v1.0.1`.
+- The workflow rebuilds the mod, picks the single non-`-sources` JAR from `build/libs/`, and uploads it to the matching GitHub Release for that tag.
+- To publish a new version, update the mod version in the project files, create a Git tag like `v1.0.1`, and push that tag to GitHub.
