@@ -50,3 +50,8 @@ header:
 - Local reference copies such as `PlaytimeLink/` and `Velocity-PlayTime/` are ignored in this workspace and are not part of the published root project.
 - Before publishing your own fork, review any config templates and generated files to ensure no local credentials were added.
 - Local-only workspace files such as IDE metadata, `bin/`, and nested Git metadata are ignored and should not be included in commits.
+
+## Automated Releases
+- GitHub Actions now rebuilds the mod on every push to `master` and on manual dispatch.
+- The workflow force-updates the `latest` release tag to the current commit and uploads a single stable asset named `playtimelink-fabric-latest.jar`.
+- After enabling Actions in your fork, download the current artifact from the repository's **Releases** page.
