@@ -32,6 +32,9 @@ public class TimeConverter {
     private static final String[] UNITS = {
             "years", "months", "weeks", "days", "hours", "minutes", "seconds"
     };
+    private static final String[] SHORT_UNITS = {
+            "y", "mo", "w", "d", "h", "m", "s"
+    };
 
     public static String convert(long secs, String toUnit) {
         // find which index we want
@@ -63,5 +66,33 @@ public class TimeConverter {
             case "seconds" -> Long.toString(secs/DURS[6]);
             default -> "ERR_INVALID_PLACEHOLDER";
         };
+    }
+
+    public static String formatCompact(long secs) {
+        if (secs <= 0) {
+            return "0s";
+        }
+
+        StringBuilder out = new StringBuilder();
+        long rem = secs;
+        int parts = 0;
+
+        for (int i = 0; i < DURS.length && parts < 3; i++) {
+            long count = rem / DURS[i];
+            rem %= DURS[i];
+
+            if (count == 0) {
+                continue;
+            }
+
+            if (out.length() > 0) {
+                out.append(' ');
+            }
+
+            out.append(count).append(SHORT_UNITS[i]);
+            parts++;
+        }
+
+        return out.length() > 0 ? out.toString() : "0s";
     }
 }
