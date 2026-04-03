@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "id": "playtimelink-fabric",
+  "version": "${version}",
+  "name": "PlaytimeLink Fabric",
+  "description": "Fabric server-side mod for Velocity playtime placeholders",
+  "authors": ["_1ms"],
+  "contact": {
+    "homepage": "https://github.com/GRX005/PlaytimeLink"
+  },
+  "license": "GPL-3.0",
+  "icon": "assets/playtimelink/icon.png",
+  "environment": "server",
+  "entrypoints": {
+    "server": [
+      "_1ms.playtimelink.PlaytimeLinkMod"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.16.13",
+    "minecraft": "~1.21.7",
+    "java": ">=21"
+  },
+  "suggests": {
+    "placeholder-api": "*"
+  }
+}
