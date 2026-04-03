@@ -2,3 +2,22 @@
 .idea
 build
 gradle
+
+# Local IDE / Eclipse metadata
+.classpath
+.project
+.settings/
+*.iml
+
+# Local wrappers and agent workspace files
+.sisyphus/
+bin/
+
+# Nested repository metadata from local migrations
+PlaytimeLink/
+Velocity-PlayTime/
+PlaytimeLink/.git/
+
+# Runtime/generated data
+**/run/
+**/playtimes.yml
